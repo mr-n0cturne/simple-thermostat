@@ -12,7 +12,8 @@ export interface Fault {
   entity: string
   icon?: string
   hide_inactive?: boolean
-  
+  // n0cturne
+  invert_state?: boolean // Neues Attribut für die Invertierung des Zustands
 }
 
 export const STATE_ICONS = {
