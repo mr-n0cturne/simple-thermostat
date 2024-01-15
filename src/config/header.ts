@@ -12,6 +12,7 @@ export interface Fault {
   entity: string
   icon?: string
   hide_inactive?: boolean
+  
 }
 
 export const STATE_ICONS = {
@@ -97,12 +98,19 @@ function parseToggle(config: ToggleConfig, hass): Toggle {
   return { entity, label }
 }
 
+// n0cturne
 function parseFaults(config: Array<Fault>, hass: HASS) {
   if (Array.isArray(config)) {
-    return config.map(({ entity, ...rest }: Fault) => {
+    return config.map(({ entity, invert_state, ...rest }: Fault) => {
+      const state = hass.states[entity].state;
+      const shouldInvert = invert_state === true; // Prüfen Sie, ob die Invertierung aktiviert ist
+
+      // Je nach invert_state-Wert wird der Zustand umgekehrt oder nicht
+      const finalState = shouldInvert ? (state === 'on' ? 'off' : 'on') : state;
+
       return {
         ...rest,
-        state: hass.states[entity],
+        state: finalState,
         entity,
       }
     })
